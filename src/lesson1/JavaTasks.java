@@ -2,6 +2,9 @@ package lesson1;
 
 import kotlin.NotImplementedError;
 
+import java.io.*;
+import java.util.*;
+
 @SuppressWarnings("unused")
 public class JavaTasks {
     /**
@@ -97,9 +100,47 @@ public class JavaTasks {
      * 24.7
      * 99.5
      * 121.3
+     время - O(N) Память - O(N)
      */
-    static public void sortTemperatures(String inputName, String outputName) {
-        throw new NotImplementedError();
+    static public void sortTemperatures(String inputName, String outputName) throws IOException {
+        List<String> list = reader(inputName);
+        int listSize = list.size();
+        int[] listInt = new int[listSize];
+        for (int i = 0; i < listSize; i++) {
+            listInt[i] = (int) (Double.parseDouble(list.get(i)) * 10);
+        }
+        List<Integer> lessZero = new ArrayList<>();
+        List<Integer> graderZero = new ArrayList<>();
+        for (int value : listInt) {
+            if (value >= 0) {
+                graderZero.add(value);
+            } else {
+                lessZero.add(Math.abs(value));
+            }
+        }
+        int[] graderZeroArr = countingSort(graderZero, 5000);
+        int[] lessZeroArr = countingSort(lessZero, 2730);
+        BufferedWriter writer = new BufferedWriter(new FileWriter(outputName));
+        for (int i = lessZeroArr.length - 1; i >= 0; i--)
+            writer.write("-" + (double) lessZeroArr[i] / 10 + "\n");
+        for (int value : graderZeroArr) writer.write((double) value / 10 + "\n");
+        writer.close();
+    }
+
+    private static int[] countingSort(List<Integer> elements, int limit) {
+        int[] count = new int[limit + 1];
+        for (int element: elements) {
+            count[element]++;
+        }
+        for (int j = 1; j <= limit; j++) {
+            count[j] += count[j - 1];
+        }
+        int[] out = new int[elements.size()];
+        for (int j = elements.size() - 1; j >= 0; j--) {
+            out[count[elements.get(j)] - 1] = elements.get(j);
+            count[elements.get(j)]--;
+        }
+        return out;
     }
 
     /**
@@ -130,9 +171,51 @@ public class JavaTasks {
      * 2
      * 2
      * 2
+     время - O(N) Память - O(N)
      */
-    static public void sortSequence(String inputName, String outputName) {
-        throw new NotImplementedError();
+    static public void sortSequence(String inputName, String outputName) throws IOException {
+        List<String> list = reader(inputName);
+        int listSize = list.size();
+        int max = 0;
+        int count = 1;
+        int maxNumber = 0;
+        int[] arrInt = new int[listSize];
+        for (int i = 0; i < listSize; i++) {
+            arrInt[i] = (Integer.parseInt(list.get(i)));
+        }
+        Sorts.quickSort(arrInt);
+        for (int i = 1; i < listSize; i++) {
+            if (max < count) {
+                max = count;
+                maxNumber = arrInt[i - 1];
+            }
+            if (arrInt[i] == arrInt[i - 1]) {
+                count++;
+            } else {
+                count = 1;
+            }
+        }
+        BufferedWriter writer = new BufferedWriter(new FileWriter(outputName));
+        for (String s : list) {
+            if (Integer.parseInt(s) != maxNumber)
+                 writer.write(s + "\n");
+        }
+        for (int i = 0; i < max; i++)
+            writer.write(maxNumber + "\n");
+        writer.close();
+    }
+
+    private static List<String> reader(String inputName) throws IOException {
+        BufferedReader reader = new BufferedReader(new FileReader(inputName));
+        String str;
+        List<String> list = new ArrayList<>();
+        while((str = reader.readLine()) != null ){
+            if(!str.isEmpty()){
+                list.add(str);
+            }
+        }
+        reader.close();
+        return list;
     }
 
     /**

@@ -96,9 +96,32 @@ public class JavaAlgorithms {
      * При сравнении подстрок, регистр символов *имеет* значение.
      * Если имеется несколько самых длинных общих подстрок одной длины,
      * вернуть ту из них, которая встречается раньше в строке first.
+     * время - O(N^3) Память - O(N^3)
      */
-    static public String longestCommonSubstring(String firs, String second) {
-        throw new NotImplementedError();
+    static public String longestCommonSubstring(String first, String second) {
+        StringBuilder str = new StringBuilder();
+        String maxStr = "";
+        int ci;
+        int cj;
+        for (int i = 0; i < first.length(); i++){
+           for (int j = 0; j < second.length(); j++) {
+               ci = i;
+               cj = j;
+               while (first.charAt(ci) == second.charAt(cj)) {
+                   str.append(first.charAt(ci));
+                   ci++;
+                   cj++;
+                   if (ci >= first.length() || cj >= second.length()) {
+                       break;
+                   }
+               }
+               if (maxStr.length() < str.length()) {
+                   maxStr = str.toString();
+               }
+               str = new StringBuilder();
+           }
+       }
+       return maxStr;
     }
 
     /**
@@ -110,8 +133,30 @@ public class JavaAlgorithms {
      *
      * Справка: простым считается число, которое делится нацело только на 1 и на себя.
      * Единица простым числом не считается.
+     время - O(N*log(logN)) Память - O(N)
      */
     static public int calcPrimesNumber(int limit) {
-        throw new NotImplementedError();
+        if (limit <= 1)
+            return 0;
+        if (limit == 2)
+            return 1;
+        limit++;
+        int[] arr = new  int[limit + 1];
+        for (int i = 0; i < limit; i++) {
+            arr[i] = i;
+        }
+        arr[1] = 0;
+        int count = 0;
+        int i = 2;
+        while (i <= limit) {
+            if (arr[i] != 0) {
+                count++;
+                for (int j = i; j < limit; j+= i) {
+                    arr[j] = 0;
+                }
+            }
+            i++;
+        }
+        return count;
     }
 }
