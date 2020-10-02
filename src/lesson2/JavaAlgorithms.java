@@ -96,32 +96,26 @@ public class JavaAlgorithms {
      * При сравнении подстрок, регистр символов *имеет* значение.
      * Если имеется несколько самых длинных общих подстрок одной длины,
      * вернуть ту из них, которая встречается раньше в строке first.
-     * время - O(N^3) Память - O(N^3)
+     * время - O(N^2) Память - O(N^2)
      */
     static public String longestCommonSubstring(String first, String second) {
-        StringBuilder str = new StringBuilder();
-        String maxStr = "";
-        int ci;
-        int cj;
-        for (int i = 0; i < first.length(); i++){
-           for (int j = 0; j < second.length(); j++) {
-               ci = i;
-               cj = j;
-               while (first.charAt(ci) == second.charAt(cj)) {
-                   str.append(first.charAt(ci));
-                   ci++;
-                   cj++;
-                   if (ci >= first.length() || cj >= second.length()) {
-                       break;
-                   }
-               }
-               if (maxStr.length() < str.length()) {
-                   maxStr = str.toString();
-               }
-               str = new StringBuilder();
-           }
-       }
-       return maxStr;
+        int n = first.length();
+        int m = second.length();
+        int[][] array = new int[n][m];
+        int max = 0;
+        int beginStr = 0;
+        for (int i = 0; i < n; i++) {
+            for (int j = 0; j < m; j++) {
+                if (first.charAt(i) == second.charAt(j)) {
+                    array[i][j] = (i == 0 || j == 0) ? 1 : array[i - 1][j - 1] + 1;
+                    if (array[i][j] > max) {
+                        max = array[i][j];
+                        beginStr = i;
+                    }
+                }
+            }
+        }
+        return first.substring(beginStr + 1 - max, beginStr + 1);
     }
 
     /**

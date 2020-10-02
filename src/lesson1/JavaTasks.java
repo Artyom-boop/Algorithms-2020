@@ -171,7 +171,7 @@ public class JavaTasks {
      * 2
      * 2
      * 2
-     время - O(N) Память - O(N)
+     время - O(N*logN) Память - O(N)
      */
     static public void sortSequence(String inputName, String outputName) throws IOException {
         List<String> list = reader(inputName);
@@ -206,16 +206,16 @@ public class JavaTasks {
     }
 
     private static List<String> reader(String inputName) throws IOException {
-        BufferedReader reader = new BufferedReader(new FileReader(inputName));
-        String str;
-        List<String> list = new ArrayList<>();
-        while((str = reader.readLine()) != null ){
-            if(!str.isEmpty()){
-                list.add(str);
+        try(BufferedReader reader = new BufferedReader(new FileReader(inputName))) {
+            String str;
+            List<String> list = new ArrayList<>();
+            while ((str = reader.readLine()) != null) {
+                if (!str.isEmpty()) {
+                    list.add(str);
+                }
             }
+            return list;
         }
-        reader.close();
-        return list;
     }
 
     /**
