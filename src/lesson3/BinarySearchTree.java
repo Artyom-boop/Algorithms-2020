@@ -101,8 +101,41 @@ public class BinarySearchTree<T extends Comparable<T>> extends AbstractSet<T> im
      */
     @Override
     public boolean remove(Object o) {
-        // TODO
-        throw new NotImplementedError();
+        if (!contains(o))
+            return false;
+        //noinspection unchecked
+        root = removeNode(root, (T) o);
+        size--;
+        return true;
+    }
+
+    private Node<T> removeNode(Node<T> root, T t) {
+        if (root == null)
+            return null;
+        int comparison = t.compareTo(root.value);
+        if (comparison == 0) {
+            if (root.left == null && root.right == null)
+                return null;
+            if (root.left == null)
+                return root.right;
+            if (root.right == null)
+                return root.left;
+            Node<T> l = root.left;
+            Node<T> r = root.right;
+            Node<T> min = root.right;
+            while (min.left != null)
+                min = min.left;
+            root = new Node<>(min.value);
+            root.left = l;
+            root.right = removeNode(r, root.value);
+            return root;
+        }
+        if (comparison > 0) {
+            root.right = removeNode(root.right, t);
+            return root;
+        }
+        root.left = removeNode(root.left, t);
+        return root;
     }
 
     @Nullable
@@ -118,9 +151,12 @@ public class BinarySearchTree<T extends Comparable<T>> extends AbstractSet<T> im
     }
 
     public class BinarySearchTreeIterator implements Iterator<T> {
+        List<Node<T>> list = new ArrayList<>();
+        Node<T> lastNode = null;
+
 
         private BinarySearchTreeIterator() {
-            // Добавьте сюда инициализацию, если она необходима.
+            treeToList(root);
         }
 
         /**
@@ -135,8 +171,7 @@ public class BinarySearchTree<T extends Comparable<T>> extends AbstractSet<T> im
          */
         @Override
         public boolean hasNext() {
-            // TODO
-            throw new NotImplementedError();
+            return !list.isEmpty();
         }
 
         /**
@@ -154,8 +189,13 @@ public class BinarySearchTree<T extends Comparable<T>> extends AbstractSet<T> im
          */
         @Override
         public T next() {
-            // TODO
-            throw new NotImplementedError();
+            if (list.isEmpty())
+                throw new IllegalStateException();
+            Node<T> node = list.get(list.size() - 1);
+            lastNode = node;
+            list.remove(list.size() - 1);
+            treeToList(node.right);
+            return node.value;
         }
 
         /**
@@ -172,10 +212,21 @@ public class BinarySearchTree<T extends Comparable<T>> extends AbstractSet<T> im
          */
         @Override
         public void remove() {
-            // TODO
-            throw new NotImplementedError();
+            if (lastNode == null )
+                throw new IllegalStateException();
+            root = removeNode(root, lastNode.value);
+            lastNode = null;
+            size--;
+        }
+
+         void treeToList(Node<T> root) {
+             if (root != null) {
+                 list.add(root);
+                 treeToList(root.left);
+         }
         }
     }
+
 
     /**
      * Подмножество всех элементов в диапазоне [fromElement, toElement)
