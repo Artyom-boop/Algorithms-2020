@@ -162,6 +162,22 @@ abstract class AbstractBinarySearchTreeTest {
             }
             println("All clear!")
         }
+        val toRemove = 5
+        val controlSet = TreeSet<Int>()
+        val binarySet = create()
+        for (i in 0..10) {
+            controlSet.add(i)
+            binarySet.add(i)
+        }
+        controlSet.remove(toRemove)
+        binarySet.remove(toRemove)
+        val iterator = binarySet.iterator()
+        val set = TreeSet<Int>()
+        while (iterator.hasNext())
+            set.add(iterator.next())
+        println("control set: $controlSet")
+        println("my set: $binarySet")
+        assertEquals(controlSet, set)
     }
 
     protected fun doIteratorTest() {
@@ -205,7 +221,12 @@ abstract class AbstractBinarySearchTreeTest {
             }
             println("All clear!")
         }
+        val myBinarySet = create()
+        assertFailsWith<IllegalStateException>("Something was supposedly returned after the elements ended") {
+            myBinarySet.iterator().next()
+        }
     }
+
 
     protected fun doIteratorRemoveTest() {
         implementationTest { create().iterator().remove() }
@@ -272,6 +293,24 @@ abstract class AbstractBinarySearchTreeTest {
             }
             println("All clear!")
         }
+        val toRemove = 0
+        val controlSet = TreeSet<Int>()
+        val binarySet = create()
+        for (i in 0..10) {
+            controlSet.add(i)
+            binarySet.add(i)
+        }
+        controlSet.remove(toRemove)
+        var iterator = binarySet.iterator()
+        if (iterator.hasNext()) {
+            iterator.next()
+            iterator.remove()
+        }
+        iterator = binarySet.iterator()
+        val set = TreeSet<Int>()
+        while (iterator.hasNext())
+            set.add(iterator.next())
+        assertEquals(controlSet, set)
     }
 
     protected fun doSubSetTest() {

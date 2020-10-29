@@ -97,6 +97,7 @@ public class BinarySearchTree<T extends Comparable<T>> extends AbstractSet<T> im
      *
      * Спецификация: {@link Set#remove(Object)} (Ctrl+Click по remove)
      *
+     * время - O(logN) Память - O(logN)
      * Средняя
      */
     @Override
@@ -151,12 +152,12 @@ public class BinarySearchTree<T extends Comparable<T>> extends AbstractSet<T> im
     }
 
     public class BinarySearchTreeIterator implements Iterator<T> {
-        List<Node<T>> list = new ArrayList<>();
+        Deque<Node<T>> stack = new ArrayDeque<>();
         Node<T> lastNode = null;
 
 
         private BinarySearchTreeIterator() {
-            treeToList(root);
+            treeToStack(root);
         }
 
         /**
@@ -167,11 +168,12 @@ public class BinarySearchTree<T extends Comparable<T>> extends AbstractSet<T> im
          *
          * Спецификация: {@link Iterator#hasNext()} (Ctrl+Click по hasNext)
          *
+         * время - O(1) Память - O(1)
          * Средняя
          */
         @Override
         public boolean hasNext() {
-            return !list.isEmpty();
+            return !stack.isEmpty();
         }
 
         /**
@@ -185,16 +187,16 @@ public class BinarySearchTree<T extends Comparable<T>> extends AbstractSet<T> im
          *
          * Спецификация: {@link Iterator#next()} (Ctrl+Click по next)
          *
+         * время - O(N) Память - O(N)
          * Средняя
          */
         @Override
         public T next() {
-            if (list.isEmpty())
+            if (stack.isEmpty())
                 throw new IllegalStateException();
-            Node<T> node = list.get(list.size() - 1);
+            Node<T> node = stack.pollLast();
             lastNode = node;
-            list.remove(list.size() - 1);
-            treeToList(node.right);
+            treeToStack(node.right);
             return node.value;
         }
 
@@ -208,6 +210,7 @@ public class BinarySearchTree<T extends Comparable<T>> extends AbstractSet<T> im
          *
          * Спецификация: {@link Iterator#remove()} (Ctrl+Click по remove)
          *
+         * время - O(logN) Память - O(logN)
          * Сложная
          */
         @Override
@@ -219,10 +222,10 @@ public class BinarySearchTree<T extends Comparable<T>> extends AbstractSet<T> im
             size--;
         }
 
-         void treeToList(Node<T> root) {
+         void treeToStack(Node<T> root) {
              if (root != null) {
-                 list.add(root);
-                 treeToList(root.left);
+                 stack.addLast(root);
+                 treeToStack(root.left);
          }
         }
     }
