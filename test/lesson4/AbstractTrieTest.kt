@@ -109,6 +109,10 @@ abstract class AbstractTrieTest {
             }
             println("All clear!")
         }
+        val trieSet = create()
+        assertFailsWith<IllegalStateException>("Something was supposedly returned after the elements ended") {
+            trieSet.iterator().next()
+        }
     }
 
     protected fun doIteratorRemoveTest() {
@@ -170,6 +174,24 @@ abstract class AbstractTrieTest {
             }
             println("All clear!")
         }
+        val toRemove = "0"
+        val controlSet = TreeSet<String>()
+        val trieSet = create()
+        for (i in 0..10) {
+            controlSet.add(i.toString())
+            trieSet.add(i.toString())
+        }
+        controlSet.remove(toRemove)
+        var iterator = trieSet.iterator()
+        if (iterator.hasNext()) {
+            iterator.next()
+            iterator.remove()
+        }
+        iterator = trieSet.iterator()
+        val set = TreeSet<String>()
+        while (iterator.hasNext())
+            set.add(iterator.next())
+        assertEquals(controlSet, set)
     }
 
 }

@@ -1,7 +1,6 @@
 package lesson4;
 
 import java.util.*;
-import kotlin.NotImplementedError;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -92,8 +91,50 @@ public class Trie extends AbstractSet<String> implements Set<String> {
     @NotNull
     @Override
     public Iterator<String> iterator() {
-        // TODO
-        throw new NotImplementedError();
+        return  new TrieIterator();
+    }
+
+    public class TrieIterator implements Iterator<String> {
+        Deque<String> stack = new ArrayDeque<>();
+        String lastString = null;
+        private TrieIterator() {
+            trieToList("", root);
+        }
+        @Override
+        public boolean hasNext() {
+          return !stack.isEmpty();
+        }
+
+        @Override
+        public String next() {
+            if (stack.isEmpty())
+                throw new IllegalStateException();
+            String string = stack.pollFirst();
+            lastString = string;
+            return string;
+        }
+
+        @Override
+        public void remove() {
+            if (lastString == null)
+                throw new IllegalStateException();
+            Deque<String> oldList = new ArrayDeque<>(stack);
+            stack.clear();
+            trieToList("", root);
+            stack.remove(lastString);
+            Trie.this.clear();
+            Trie.this.addAll(stack);
+            stack = oldList;
+            lastString = null;
+        }
+
+        void trieToList(String str, Node root) {
+            if (root.children.isEmpty() && !str.equals(""))
+                stack.add(str.substring(0, str.length() - 1));
+            for (Map.Entry<Character, Node> entry: root.children.entrySet()) {
+                trieToList(str + entry.getKey(),entry.getValue());
+            }
+        }
     }
 
 }
