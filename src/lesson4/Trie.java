@@ -1,6 +1,7 @@
 package lesson4;
 
 import java.util.*;
+
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -118,21 +119,15 @@ public class Trie extends AbstractSet<String> implements Set<String> {
         public void remove() {
             if (lastString == null)
                 throw new IllegalStateException();
-            Deque<String> oldList = new ArrayDeque<>(stack);
-            stack.clear();
-            trieToStack("", root);
-            stack.remove(lastString);
-            Trie.this.clear();
-            Trie.this.addAll(stack);
-            stack = oldList;
+            Trie.this.remove(lastString);
             lastString = null;
         }
 
         void trieToStack(String str, Node root) {
-            if (root.children.isEmpty() && !str.equals(""))
-                stack.add(str.substring(0, str.length() - 1));
             for (Map.Entry<Character, Node> entry: root.children.entrySet()) {
-                trieToStack(str + entry.getKey(),entry.getValue());
+                if (entry.getKey() != (char) 0)
+                    trieToStack(str + entry.getKey(),entry.getValue());
+                else stack.add(str);
             }
         }
     }

@@ -122,7 +122,7 @@ abstract class AbstractTrieTest {
             val controlSet = mutableSetOf<String>()
             val removeIndex = random.nextInt(15) + 1
             var toRemove = ""
-            for (i in 1..15) {
+            for (i in 1..10000) {
                 val string = random.nextString("abcdefgh", 1, 15)
                 controlSet.add(string)
                 if (i == removeIndex) {
