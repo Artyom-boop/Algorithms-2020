@@ -76,6 +76,22 @@ abstract class AbstractOpenAddressingSetTest {
                 )
             }
         }
+        val toRemove = "5"
+        val controlSet = TreeSet<String>()
+        val binarySet = create<String>(4)
+        for (i in 0..10) {
+            controlSet.add(i.toString())
+            binarySet.add(i.toString())
+        }
+        controlSet.remove(toRemove)
+        binarySet.remove(toRemove)
+        val iterator = binarySet.iterator()
+        val set = TreeSet<String>()
+        while (iterator.hasNext())
+            set.add(iterator.next())
+        println("control set: $controlSet")
+        println("my set: $binarySet")
+        assertEquals(controlSet, set)
     }
 
     protected fun doIteratorTest() {
@@ -117,6 +133,10 @@ abstract class AbstractOpenAddressingSetTest {
                 openAddressingSetIter.next()
             }
             println("All clear!")
+        }
+        val mySet = create<String>(2)
+        assertFailsWith<IllegalStateException>("Something was supposedly returned after the elements ended") {
+            mySet.iterator().next()
         }
     }
 
@@ -175,5 +195,23 @@ abstract class AbstractOpenAddressingSetTest {
             }
             println("All clear!")
         }
+        val toRemove = "0"
+        val controlSet = TreeSet<String>()
+        val openAddressingSetSet = create<String>(4)
+        for (i in 0..10) {
+            controlSet.add(i.toString())
+            openAddressingSetSet.add(i.toString())
+        }
+        controlSet.remove(toRemove)
+        var iterator = openAddressingSetSet.iterator()
+        if (iterator.hasNext()) {
+            iterator.next()
+            iterator.remove()
+        }
+        iterator = openAddressingSetSet.iterator()
+        val set = TreeSet<String>()
+        while (iterator.hasNext())
+            set.add(iterator.next())
+        assertEquals(controlSet, set)
     }
 }

@@ -1,19 +1,20 @@
 package lesson5;
 
-import kotlin.NotImplementedError;
 import org.jetbrains.annotations.NotNull;
 
-import java.util.AbstractSet;
-import java.util.Iterator;
-import java.util.Set;
+import java.util.*;
 
 public class OpenAddressingSet<T> extends AbstractSet<T> {
 
-    private final int bits;
+    private int bits;
 
-    private final int capacity;
+    private static class Del {
+    }
+    private Del del = new Del();
 
-    private final Object[] storage;
+    private int capacity;
+
+    private Object[] storage;
 
     private int size = 0;
 
@@ -67,7 +68,7 @@ public class OpenAddressingSet<T> extends AbstractSet<T> {
         int startingIndex = startingIndex(t);
         int index = startingIndex;
         Object current = storage[index];
-        while (current != null) {
+        while (current != null && current != del) {
             if (current.equals(t)) {
                 return false;
             }
@@ -95,7 +96,26 @@ public class OpenAddressingSet<T> extends AbstractSet<T> {
      */
     @Override
     public boolean remove(Object o) {
-        return super.remove(o);
+        if (!contains(o))
+            return false;
+        //noinspection unchecked
+        T t = (T) o;
+        int startingIndex = startingIndex(t);
+        int index = startingIndex;
+        Object current = storage[index];
+        while (current != null) {
+            if (current.equals(t)) {
+                storage[index] = del;
+                break;
+            }
+            index = (index + 1) % capacity;
+            if (index == startingIndex) {
+                return false;
+            }
+            current = storage[index];
+        }
+        size--;
+        return true;
     }
 
     /**
@@ -111,7 +131,44 @@ public class OpenAddressingSet<T> extends AbstractSet<T> {
     @NotNull
     @Override
     public Iterator<T> iterator() {
-        // TODO
-        throw new NotImplementedError();
+        return  new OpenAddressingSetIterator();
+    }
+
+    public class OpenAddressingSetIterator implements Iterator<T> {
+        T lastElement = null;
+        int index = 0;
+        int lastIndex = index;
+        int count = 0;
+
+
+        @Override
+        public boolean hasNext() {
+            return count < size;
+        }
+
+        @Override
+        public T next() {
+            if (count >= size)
+                throw new IllegalStateException();
+            while (storage[index] == null || storage[index] == del)
+                index++;
+            count++;
+            //noinspection unchecked
+            T element = (T) storage[index];
+            lastElement = element;
+            lastIndex = index;
+            index++;
+            return element;
+        }
+
+        @Override
+        public void remove() {
+            if (lastElement == null)
+                throw new IllegalStateException();
+            storage[lastIndex] = del;
+            size--;
+            count--;
+            lastElement = null;
+        }
     }
 }
