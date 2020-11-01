@@ -6,15 +6,15 @@ import java.util.*;
 
 public class OpenAddressingSet<T> extends AbstractSet<T> {
 
-    private int bits;
+    private final int bits;
 
-    private static class Del {
+    private final static class Del {
     }
-    private Del del = new Del();
+    private final Del del = new Del();
 
-    private int capacity;
+    private final int capacity;
 
-    private Object[] storage;
+    private final Object[] storage;
 
     private int size = 0;
 
