@@ -93,6 +93,7 @@ public class OpenAddressingSet<T> extends AbstractSet<T> {
      * Спецификация: {@link Set#remove(Object)} (Ctrl+Click по remove)
      *
      * Средняя
+     * Время - О(n), память - О(1)
      */
     @Override
     public boolean remove(Object o) {
@@ -127,6 +128,9 @@ public class OpenAddressingSet<T> extends AbstractSet<T> {
      * Спецификация: {@link Iterator} (Ctrl+Click по Iterator)
      *
      * Средняя (сложная, если поддержан и remove тоже)
+     * Время - О(1), память - О(1) - hasNext
+     * Время - О(n), память - О(1) - next
+     * Время - О(1), память - О(1) - remove
      */
     @NotNull
     @Override

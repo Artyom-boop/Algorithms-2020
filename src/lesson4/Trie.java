@@ -88,6 +88,9 @@ public class Trie extends AbstractSet<String> implements Set<String> {
      * Спецификация: {@link Iterator} (Ctrl+Click по Iterator)
      *
      * Сложная
+     * Время - О(1), память - О(1) - hasNext
+     * Время - О(n), память - О(n) - next
+     * Время - О(n), память - О(n) - remove
      */
     @NotNull
     @Override

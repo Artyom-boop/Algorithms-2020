@@ -73,13 +73,13 @@ public class JavaDynamicTasks {
             int lo = 1;
             int hi = l;
         while (lo <= hi){
-                int mid = (int) Math.ceil(((lo + hi) / 2));
-                if (list.get(m[mid]) <= list.get(i)) {
-                    hi = mid - 1;
-                } else {
-                    lo = mid + 1;
-                }
+            int mid = (int) Math.ceil(((lo + hi) / 2));
+            if (list.get(m[mid]) <= list.get(i)) {
+                hi = mid - 1;
+            } else {
+                lo = mid + 1;
             }
+        }
         int newL = lo;
         p[i] = m[newL - 1];
         m[newL] = i;
